@@ -1,14 +1,14 @@
 from empyrial import empyrial, Engine
 
-tickers = ["BLK", "BAC", "AAPL", "TM", "JPM","JD", "INTU", "NVDA", "DIS", "TSLA"]
 
-portfolio = Engine(
-      start_date = "2019-01-01",
-      portfolio = tickers,
-      optimizer = "EF", 
-      rebalance = "1y"
-)
+def test_rebalnce():
+    tickers = ["BLK", "BAC", "AAPL", "TM", "JPM", "JD", "INTU", "NVDA", "DIS", "TSLA"]
 
-test = portfolio.rebalance
+    portfolio = Engine(
+        start_date="2019-01-01",
+        portfolio=tickers,
+        optimizer="EF",
+        rebalance="1y"
+    )
 
-empyrial(portfolio, rebalance = True)
+    test = portfolio.rebalance
