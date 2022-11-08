@@ -1,3 +1,25 @@
+"""
+Refactor:
+
+TODO:
+- [ ] modulize optimizers
+    - [ ] build an optimizer factory
+    - [ ] add actor method for each type of optimizer
+    - [ ] build base class & child class for optimizers
+- [ ] extract get_report to another python file
+    - [ ] try to modulize it into many functions
+
+- [ ] Engine is now use as a DataClass (which is strange)!
+    - [ ] move neccessary method to the `Engine` DataClass and rename
+        it as `Portfolio`
+
+- [ ] Understand the usage of empyrial (maybe it is to visualize the result)
+    - [ ] extract it to another python module
+    - [ ] ecapsulate the viewing of benchmark performance and its comparison with
+            target into the Viewing class
+
+- [ ] Seperate make_rebalance and single time optimization
+"""
 import numpy as np
 import pandas as pd
 import datetime as dt
@@ -63,8 +85,6 @@ class Engine:
         optimizer=None,
         max_vol=0.15,
         diversification=1,
-        # confidences=None,
-        # view=None,
         min_weights=None,
         max_weights=None,
         risk_manager=None,
@@ -187,7 +207,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
             weights = rebalance_schedule[str(dates[i + 1])]
 
             # then we want to get the returns
-            
+
             add_returns = get_returns(
                 my_portfolio.portfolio,
                 weights,
@@ -282,7 +302,7 @@ def empyrial(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95):
         end_date=my_portfolio.end_date,
     )
     benchmark = benchmark.dropna()
-    
+
     CAGR = cagr(returns, period='daily', annualization=None)
     # CAGR = round(CAGR, 2)
     # CAGR = CAGR.tolist()
@@ -685,7 +705,7 @@ def optimize_portfolio(my_portfolio, vol_max=25, pie_size=5, font_size=14):
         "HRP": hrp,
         "MINVAR": min_var,
     }
-    
+
     if my_portfolio.optimizer in optimizers.keys():
         if my_portfolio.optimizer == "MEANVAR":
             wts = optimizers.get(my_portfolio.optimizer)(my_portfolio, my_portfolio.max_vol)
@@ -872,7 +892,7 @@ def make_rebalance(
     return output_df
 
 
-def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, filename : str ="report.pdf"):
+def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, filename: str ="report.pdf"):
     try:
         # we want to get the dataframe with the dates and weights
         rebalance_schedule = my_portfolio.rebalance
@@ -990,8 +1010,8 @@ def get_report(my_portfolio, rf=0.0, sigma_value=1, confidence_value=0.95, filen
 
     fig1, ax1 = plt.subplots()
     fig1.set_size_inches(5, 5)
-    
-    #defining colors for the allocation pie
+
+    # defining colors for the allocation pie
     cs = [
         "#ff9999",
         "#66b3ff",
